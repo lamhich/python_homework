@@ -37,24 +37,49 @@ except Exception as e:
 
 #Task 2: Read a CSV File
 import csv
+import traceback
+
 def read_employees():
-    employees = {}  # To store data
-    rows = []  # To store employee rows
+    employees_data = {}
+    rows = []
+    
     try:
-        with open('../csv/employees.csv', mode='r') as file:
+        # Open the CSV file for reading
+        with open("../csv/minutes.csv", "r") as file:
             csv_reader = csv.reader(file)
-            fields = next(csv_reader)  # Get the first row for field names
-            employees['fields'] = fields
+            
+            # Get the first row as field names
+            employees_data["fields"] = next(csv_reader)  # The first row is the header
+            
+            # Read the rest of the rows
             for row in csv_reader:
                 rows.append(row)
-            employees['rows'] = rows
+            
+            # Add the rows to the dictionary under the key "rows"
+            employees_data["rows"] = rows
+        
+        return employees_data
+    
     except Exception as e:
-        print("An exception occurred: ", e)
-    return employees
+        # Catch and handle any exceptions
+        trace_back = traceback.extract_tb(e.__traceback__)
+        stack_trace = []
+        for trace in trace_back:
+            stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
+        
+        print(f"Exception type: {type(e).__name__}")
+        message = str(e)
+        if message:
+            print(f"Exception message: {message}")
+        print(f"Stack trace: {stack_trace}")
+        exit(1)
 
-# Test
+# Call the function and store the result in the 'employees' variable
 employees = read_employees()
+
+# Print out the employees data to verify it's working correctly
 print(employees)
+
 
 #Task 3: Find the Column Index
 def column_index(field_name):
